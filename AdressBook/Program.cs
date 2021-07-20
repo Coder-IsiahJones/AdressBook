@@ -14,12 +14,17 @@ namespace AdressBook
 {
     public class Program
     {
-        public static async Task Main(string[] args) {
+        public static async Task Main(string[] args)
+        {
             var host = CreateHostBuilder(args).Build();
 
-            var dbContext = host.Services.CreateScope().ServiceProvider.GetService<ApplicationDbContext>();
+            var dbContext = host.Services
+                                .CreateScope().ServiceProvider
+                                .GetRequiredService<ApplicationDbContext>();
 
             await dbContext.Database.MigrateAsync();
+
+            host.Run();
         }
 
         public static IHostBuilder CreateHostBuilder(string[] args) =>
