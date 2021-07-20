@@ -1,9 +1,7 @@
 ﻿using AdressBook.Serivces.Interfaces;
 using Microsoft.AspNetCore.Http;
 using System;
-using System.Collections.Generic;
 using System.IO;
-using System.Linq;
 using System.Threading.Tasks;
 
 namespace AdressBook.Serivces
@@ -12,16 +10,16 @@ namespace AdressBook.Serivces
     {
         public string ConvertByteArrayToFile(byte[] fileData, string extension)
         {
-           if (fileData == null) return string.Empty;
+            if (fileData == null) return string.Empty;
 
-           string imageBase64Data = Convert.ToBase64String(fileData);
+            string imageBase64Data = Convert.ToBase64String(fileData);
 
             return $"data:{extension};base64,{imageBase64Data}";
         }
 
         public async Task<byte[]> ConvertFileToByteArrayAsync(IFormFile file)
         {
-            using MemoryStream memoryStream= new MemoryStream();
+            using MemoryStream memoryStream = new MemoryStream();
 
             await file.CopyToAsync(memoryStream);
 

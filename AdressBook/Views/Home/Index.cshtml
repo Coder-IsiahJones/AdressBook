@@ -1,8 +1,102 @@
 ﻿@{
     ViewData["Title"] = "Home Page";
 }
+<link rel="stylesheet" href="/css/prism.css">
 
 <div class="text-center">
     <h1 class="display-4">Welcome</h1>
     <p>Learn about <a href="https://docs.microsoft.com/aspnet/core">building Web apps with ASP.NET Core</a>.</p>
 </div>
+
+<div class="container">
+    <div class="row">
+        <div class="col">
+            <img class="img-fluid img-thumbnail rounded" src="~/img/address-book.jpg">
+        </div>
+
+        <div class="col">
+            <h2>Address Book</h2>
+            <hr />
+            <p>
+                The goal of this practice demo is to learn MVC with the implementation of Heroku. A key feature of this application is the use of images. The image file that is upload by the user is then stored in a database. To do this the approach of taking the file and breaking it into pieces of information to store in the database. The image file itself is stored as a whole in the database as a Byte Array. The file type is also stored in the database with the record. A simple Image Service is used to convert the file to a Byte Array and then back to a file when its method is called by its controller. There are many different approaches to storing image files for your application. Previously, I would have stored the whole file on the server and a string that contains the file path to locate in the image folder on the server. I currently don't know which method is the best practice use or the faster performance option. I have noticed that storing the image file in the database as a byte can take time converting the file back and forth if the file size is large. This new method is still interesting but I will continue to implement it in different ways and test projects to see more of its benefits and negatives.
+            </p>
+        </div>
+    </div>
+
+    <div>
+        <h2>Image Service</h2>
+        <pre class="line-numbers">
+        <code class="language-csharp">
+using Microsoft.AspNetCore.Http;
+using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Threading.Tasks;
+
+namespace AdressBook.Serivces.Interfaces
+{
+    public interface IImageService
+    {
+        public Task<byte[]> ConvertFileToByteArrayAsync(IFormFile file);
+        public string ConvertByteArrayToFile(byte[] fileData, string extension);
+    }
+}
+            </code>
+        </pre>
+    </div>
+
+    <div>
+        <h2>Basic Image Service</h2>
+<pre class="line-numbers">
+        <code class="language-csharp">
+        using AdressBook.Serivces.Interfaces;
+using Microsoft.AspNetCore.Http;
+using System;
+using System.Collections.Generic;
+using System.IO;
+using System.Linq;
+using System.Threading.Tasks;
+
+namespace AdressBook.Serivces
+{
+    public class BasicImageService : IImageService
+    {
+        public string ConvertByteArrayToFile(byte[] fileData, string extension)
+        {
+           if (fileData == null) return string.Empty;
+
+           string imageBase64Data = Convert.ToBase64String(fileData);
+
+            return $"data:{extension};base64,{imageBase64Data}";
+        }
+
+        public async Task<byte[]> ConvertFileToByteArrayAsync(IFormFile file)
+        {
+            using MemoryStream memoryStream= new MemoryStream();
+
+            await file.CopyToAsync(memoryStream);
+
+            byte[] byteFile = memoryStream.ToArray();
+
+            return byteFile;
+        }
+    }
+}
+     </code>
+</pre>
+    </div>
+</div>
+
+@section scripts
+{
+    <!-- Prism -->
+    <script src="~/js/prism.js"></script>
+    <script>
+        Prism.plugins.NormalizeWhitespace.setDefaults({
+            'remove-trailing': true,
+            'remove-indent': true,
+            'left-trim': true,
+            'right-trim': true,
+        })
+    </script>
+}
