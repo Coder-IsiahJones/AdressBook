@@ -43,6 +43,7 @@ namespace AdressBook.Models
         [DataType(DataType.Upload)]
         public IFormFile ImageFile { get; set; }
 
+        [Display(Name = "Image")]
         public byte[] ImageData { get; set; }
         public string ImageType { get; set; }
 
